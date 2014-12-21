@@ -7,10 +7,6 @@
 (def dirs {:left  KeyEvent/VK_LEFT
            :right KeyEvent/VK_RIGHT})
 
-(defn slow [x]
-  (let [sign (Integer/signum x)]
-    (- x sign)))
-
 (defclass <Clj> <Sprite>
   {:speed 0}
   {:init
@@ -50,7 +46,7 @@
        ((this :sprites first) :set :speed -8)
        
        :else
-       ((this :sprites first) :setf :speed slow)))})
+       ((this :sprites first) :set :speed 0)))})
 
 (defn -main [& [not-quit]]
   (let [game  (new+ <Demo>)
