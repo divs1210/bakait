@@ -1,5 +1,6 @@
 (ns bakait.core-test
-  (:require [cljos.core   :refer :all]
+  (:require [clojure.test :refer :all]
+            [cljos.core   :refer :all]
             [bakait.core  :refer :all])
   (:import (javax.swing JFrame)
            (java.awt.event KeyEvent)))
