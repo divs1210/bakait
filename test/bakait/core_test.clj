@@ -8,27 +8,27 @@
 (def dirs {:left  KeyEvent/VK_LEFT
            :right KeyEvent/VK_RIGHT})
 
-(defclass <Clj> <Sprite>
-  {:speed 0}
+(defclass <Clj> <Actor>
+  {:speed 0
+   :img-paths ["res/clojure-icon.gif"
+               "res/clojure-icon-2.gif"
+               "res/clojure-icon-3.gif"
+               "res/clojure-icon-4.gif"]}
   {:init
    (fn [this]
      (this :super :init "clj")
-     (dorun 
-       (map #(this :add-img (read-image %) 5)
-            ["res/clojure-icon.gif"
-             "res/clojure-icon-2.gif"
-             "res/clojure-icon-3.gif"
-             "res/clojure-icon-4.gif"])))
-   
-   :advance-1-frame
-   (fn [this]
-     (when (or (this :speed (comp not zero?))
-               (this :curr-frame (comp nil? first)))
-       (this :super :advance-1-frame)))
-   
+     (this :add-anim [[(read-image (this :img-paths first)) 9999]])
+     (this :add-anim (for [img (this :img-paths rest)]
+                       [(read-image img) 5]))
+     (this :add-anim (for [img (reverse (this :img-paths rest))]
+                       [(read-image img) 5]))
+     (this :set-curr-anim 0))
+
    :update
    (fn [this]
-     (this :move-by [(this :speed) 0]))})
+     (this :super :update)
+     (when-not (this :speed zero?)
+       (this :move-by [(this :speed) 0])))})
 
 (defclass <Demo> <Game>
   {}
@@ -36,18 +36,24 @@
    (fn [this]
      (this :super :init 600 100)
      (this :add-sprite (new+ <Clj>)))
-   
+
    :update
    (fn [this]
      (cond
        (this :pressed? (dirs :right))
-       ((this :sprites first) :set :speed 8)
-       
+       (do
+         ((this :sprites first) :set :speed 8)
+         ((this :sprites first) :set-curr-anim 1))
+
        (this :pressed? (dirs :left))
-       ((this :sprites first) :set :speed -8)
-       
+       (do
+         ((this :sprites first) :set :speed -8)
+         ((this :sprites first) :set-curr-anim 2))
+
        :else
-       ((this :sprites first) :set :speed 0)))})
+       (do
+         ((this :sprites first) :set :speed 0)
+         ((this :sprites first) :set-curr-anim 0))))})
 
 (defn -main [& [not-quit]]
   (let [game  (new+ <Demo>)
