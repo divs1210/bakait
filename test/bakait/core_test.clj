@@ -10,25 +10,22 @@
 
 (defclass <Clj> <Actor>
   {:speed 0
-   :img-paths ["res/clojure-icon.gif"
-               "res/clojure-icon-2.gif"
-               "res/clojure-icon-3.gif"
-               "res/clojure-icon-4.gif"]}
+   :imgs  (map read-image ["res/clojure-icon.gif"
+                           "res/clojure-icon-2.gif"
+                           "res/clojure-icon-3.gif"
+                           "res/clojure-icon-4.gif"])}
   {:init
    (fn [this]
      (this :super :init "clj")
-     (this :add-anim [[(read-image (this :img-paths first)) 9999]])
-     (this :add-anim (for [img (this :img-paths rest)]
-                       [(read-image img) 5]))
-     (this :add-anim (for [img (reverse (this :img-paths rest))]
-                       [(read-image img) 5]))
-     (this :set-curr-anim 0))
+     (this :add-anim :idle  [[(this :imgs first) 9999]])
+     (this :add-anim :left  (for [img (this :imgs rest)] [img 5]))
+     (this :add-anim :right (for [img (reverse (this :imgs rest))] [img 5]))
+     (this :set-curr-anim :idle))
 
    :update
    (fn [this]
      (this :super :update)
-     (when-not (this :speed zero?)
-       (this :move-by [(this :speed) 0])))})
+     (this :move-by [(this :speed) 0]))})
 
 (defclass <Demo> <Game>
   {}
@@ -43,17 +40,17 @@
        (this :pressed? (dirs :right))
        (do
          ((this :sprites first) :set :speed 8)
-         ((this :sprites first) :set-curr-anim 1))
+         ((this :sprites first) :set-curr-anim :right))
 
        (this :pressed? (dirs :left))
        (do
          ((this :sprites first) :set :speed -8)
-         ((this :sprites first) :set-curr-anim 2))
+         ((this :sprites first) :set-curr-anim :left))
 
        :else
        (do
          ((this :sprites first) :set :speed 0)
-         ((this :sprites first) :set-curr-anim 0))))})
+         ((this :sprites first) :set-curr-anim :idle))))})
 
 (defn -main [& [not-quit]]
   (let [game  (new+ <Demo>)
@@ -62,3 +59,5 @@
       (.setDefaultCloseOperation (frame :peer) JFrame/EXIT_ON_CLOSE))
     (game :play)
     game))
+
+(-main 1)

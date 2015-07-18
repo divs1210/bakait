@@ -49,17 +49,17 @@
                           nil))})
 
 (defclass <Actor> <Sprite>
-  {:anims [] :anim-index nil}
+  {:anims {} :curr-anim-name nil}
   {:add-anim
-   (fn [this anim]
-     (this :setf :anims conj anim))
+   (fn [this anim-name anim]
+     (this :setf :anims assoc anim-name anim))
 
    :set-curr-anim
-   (fn [this anim-index]
-     (when (not= anim-index (this :anim-index))
-       (this :set :img-frame-queue (vec ((this :anims) anim-index)))
+   (fn [this anim-name]
+     (when (not= anim-name (this :curr-anim-name))
+       (this :set :img-frame-queue (vec (this :anims anim-name)))
        (this :set :curr-frame (this :img-frame-queue first))
-       (this :set :anim-index anim-index)))})
+       (this :set :curr-anim-name anim-name)))})
 
 ;------------------------------
 ;View - Pane and Window
