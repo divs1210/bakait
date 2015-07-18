@@ -59,5 +59,3 @@
       (.setDefaultCloseOperation (frame :peer) JFrame/EXIT_ON_CLOSE))
     (game :play)
     game))
-
-(-main 1)
