@@ -16,11 +16,14 @@
                            "res/clojure-icon-4.gif"])}
   {:init
    (fn [this]
-     (this :super :init "clj")
-     (this :add-anim :idle  [[(this :imgs first) 9999]])
-     (this :add-anim :left  (for [img (this :imgs rest)] [img 5]))
-     (this :add-anim :right (for [img (reverse (this :imgs rest))] [img 5]))
-     (this :set-curr-anim :idle))
+     (doto+ this
+       (:super :init "clj")
+       (:add-anim :idle  [[(this :imgs first) 9999]])
+       (:add-anim :left  (for [img (-> (this :imgs) rest)]
+                           [img 5]))
+       (:add-anim :right (for [img (-> (this :imgs) rest reverse)]
+                           [img 5]))
+       (:set-curr-anim :idle)))
 
    :update
    (fn [this]
