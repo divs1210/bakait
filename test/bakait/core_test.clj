@@ -41,19 +41,19 @@
    (fn [this]
      (cond
        (this :pressed? (dirs :right))
-       (do
-         ((this :sprites first) :set :speed 8)
-         ((this :sprites first) :set-curr-anim :right))
+       (doto+ (this :sprites first)
+         (:set :speed 8)
+         (:set-curr-anim :right))
 
        (this :pressed? (dirs :left))
-       (do
-         ((this :sprites first) :set :speed -8)
-         ((this :sprites first) :set-curr-anim :left))
+       (doto+ (this :sprites first)
+         (:set :speed -8)
+         (:set-curr-anim :left))
 
        :else
-       (do
-         ((this :sprites first) :set :speed 0)
-         ((this :sprites first) :set-curr-anim :idle))))})
+       (doto+ (this :sprites first)
+         (:set :speed 0)
+         (:set-curr-anim :idle))))})
 
 (defn -main [& [not-quit]]
   (let [game  (new+ <Demo>)
