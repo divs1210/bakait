@@ -88,7 +88,7 @@
            (self :setf :pressed conj (.getKeyCode e)))
 
          (keyReleased [e]
-           (self :setf :pressed clojure.set/difference #{(.getKeyCode e)}))))
+           (self :setf :pressed disj (.getKeyCode e)))))
      (doto (self :peer)
        (.setFocusable true)
        (.addKeyListener (self :peer))
